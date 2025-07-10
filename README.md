@@ -36,12 +36,12 @@ flatten 한후 1차원의 512크기의 tensor로 축소.
 
 
 
-3. 
+3. 학습 방법
+오차함수는 Mean Squared Loss를 사용함.
+Optimizer는 adam optimizer를 사용함.
 
 
-
-
-
+   
 3.  Stochastic Encoder
 
 
