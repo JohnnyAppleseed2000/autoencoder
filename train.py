@@ -1,8 +1,14 @@
 from model import Autoencoder
 from model import EarlyStopping
 import dataset
+import torch
+import torch.nn as nn
+import torch.optim as optim
 
-# 모델 초기화
+# 1. GPU 설정
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+# 2. 모델 초기화, 데이터셋 불러오기
 model = Autoencoder().to(device)
 train_loader = dataset.train_loader
 test_loader = dataset.test_loader
@@ -12,8 +18,8 @@ criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # 4. 학습 루프
-num_epochs = 10
-
+num_epochs = 20
+early_stopping = EarlyStopping(patience=5)
 for epoch in range(num_epochs):
     running_loss = 0.0
     for data in train_loader:
@@ -30,9 +36,11 @@ for epoch in range(num_epochs):
         optimizer.step()
 
         running_loss += loss.item()
-    EarlyStopping(running_loss)
-    if EarlyStopping.EarlyStop == True:
+    early_stopping(running_loss)
+    if early_stopping.EarlyStop:
         break
     print(f"Epoch {epoch+1}/{num_epochs}, Loss: {running_loss/len(train_loader):.6f}")
 
 print("훈련 완료!")
+
+torch.save(model.state_dict(),'autoencoder.pth')

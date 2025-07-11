@@ -6,7 +6,7 @@
 1. Dataset
 MNIST 는 아래 사진과 같이 28x28의 픽셀로 이루어진 숫자의 이미지이다.
 
-![img_1.png](img_1.png)
+![img_1.png](images/mnist.png)
 
 이 이미지를 텐서로 변환하면 (batch size, 채널=1, 높이 픽셀=28, 너비 픽셀=28) 모양의 텐서가 된다.
 
@@ -18,7 +18,7 @@ Kernel size = 3 , stride = 1 , padding = 1 을 사용.
 
 - Encoder단계에선 2번의 CNN 과정을 거친후 1024의 encoding size로 flatten 해준다
 
-![img.png](img.png)
+![img.png](images/cnn.png)
 
 첫 Convolution과 max pooling을 통해 size (24,14,14)
 두번째 convolution과 max pooling을 통해 size (48,7,7)

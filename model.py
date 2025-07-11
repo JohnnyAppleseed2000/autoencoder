@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 
 class Autoencoder(nn.Module):
@@ -36,6 +35,9 @@ class Autoencoder(nn.Module):
             nn.Sigmoid()
         )
 
+    def get_embedding(self, x):
+        encoded = self.encoder(x)
+        return encoded
     def forward(self, x):
         encoded = self.encoder(x)
         decoded = self.decoder(encoded)
@@ -50,10 +52,10 @@ class EarlyStopping:
     def __call__(self, running_loss):
         if self.best_loss is None:
             self.best_loss = running_loss
-        if self.best_loss >= running_loss:
-            self.best_loss = self.best_loss
-        elif self.best_loss < running_loss:
+        elif self.best_loss >= running_loss:
             self.best_loss = running_loss
+        elif self.best_loss < running_loss:
+            self.best_loss = self.best_loss
             self.counter += 1
             if self.counter == self.patience:
                 self.EarlyStop = True
