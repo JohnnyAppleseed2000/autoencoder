@@ -1,4 +1,5 @@
 from model import Autoencoder
+from model import EarlyStopping
 import dataset
 
 # 모델 초기화
@@ -29,7 +30,9 @@ for epoch in range(num_epochs):
         optimizer.step()
 
         running_loss += loss.item()
-
+    EarlyStopping(running_loss)
+    if EarlyStopping.EarlyStop == True:
+        break
     print(f"Epoch {epoch+1}/{num_epochs}, Loss: {running_loss/len(train_loader):.6f}")
 
 print("훈련 완료!")
