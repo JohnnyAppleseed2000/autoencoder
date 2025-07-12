@@ -4,6 +4,7 @@ import dataset
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import matplotlib.pyplot as plt
 
 # 1. GPU 설정
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -18,7 +19,8 @@ criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # 4. 학습 루프
-num_epochs = 20
+num_epochs = 30
+train_losses = []
 early_stopping = EarlyStopping(patience=5)
 for epoch in range(num_epochs):
     running_loss = 0.0
@@ -36,11 +38,22 @@ for epoch in range(num_epochs):
         optimizer.step()
 
         running_loss += loss.item()
+    epoch_loss = running_loss / len(train_loader)
+    train_losses.append(epoch_loss)
     early_stopping(running_loss)
     if early_stopping.EarlyStop:
         break
-    print(f"Epoch {epoch+1}/{num_epochs}, Loss: {running_loss/len(train_loader):.6f}")
+    print(f"Epoch {epoch+1}/{num_epochs}, Loss: {epoch_loss:.6f}")
 
 print("훈련 완료!")
 
 torch.save(model.state_dict(),'autoencoder.pth')
+
+loss_length = len(train_losses)
+epochs_list = [1+i for i in range(loss_length)]
+plt.figure(figsize = (8,4))
+plt.plot(epochs_list,train_losses)
+plt.xticks(range(0, len(epochs_list)+1, 5))
+plt.title("Train Loss")
+plt.xlabel("Epoch")
+plt.show()
